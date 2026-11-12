@@ -68,6 +68,7 @@ public class UserService implements UserDetailsService {
 		entity.setUsername(dto.getUsername());
 		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity.setRole(Role.fromId(dto.getRole()));
+		entity.setActive(dto.getActive());
 		entity = repository.save(entity);
 		return new UserDTO(entity);
 	}
@@ -80,7 +81,7 @@ public class UserService implements UserDetailsService {
 			copyDtoToEntity(dto, entity);
 			if (authService.isAdmin()) {
 				entity.setRole(Role.fromId(dto.getRole()));
-				entity.setActive(dto.getActive());
+				if (dto.getActive() != null) entity.setActive(dto.getActive());
 			}
 			entity = repository.saveAndFlush(entity);
 			return new UserDTO(entity);
@@ -102,7 +103,6 @@ public class UserService implements UserDetailsService {
 	private void copyDtoToEntity(UserDTO dto, User entity) {
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
-		entity.setActive(dto.getActive());
 	}
 
 	@Override

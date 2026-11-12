@@ -23,7 +23,7 @@ public class UserDTO implements Serializable {
 	@Email(message = "Email inválido")
 	@Size(max = 120, message = "O e-mail deve ter no máximo 120 caracteres.")
 	private String email;
-	private Boolean active = true;
+	private Boolean active;
 	private String role;
 	private Instant createdAt;
 	private Instant updatedAt;
@@ -87,7 +87,7 @@ public class UserDTO implements Serializable {
 	}
 
 	public void setActive(Boolean active) {
-		this.active = (active != null) ? active : true;
+		this.active = active;
 	}
 
 	public String getRole() {
