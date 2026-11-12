@@ -46,15 +46,17 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
 			}
 		}
 
-		boolean roleValida = false;
-		for (Role r : Role.values()) {
-			if (r.getId().equals(dto.getRole())) {
-				roleValida = true;
-				break;
+		if (dto.getRole() != null) {
+			boolean roleValida = false;
+			for (Role r : Role.values()) {
+				if (r.getId().equals(dto.getRole())) {
+					roleValida = true;
+					break;
+				}
 			}
-		}
-		if (!roleValida) {
-			list.add(new FieldMessage("role", "Role inválida"));
+			if (!roleValida) {
+				list.add(new FieldMessage("role", "Role inválida"));
+			}
 		}
 
 		for (FieldMessage e : list) {

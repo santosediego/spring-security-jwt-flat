@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
 			User entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
 			if (authService.isAdmin()) {
-				entity.setRole(Role.fromId(dto.getRole()));
+				if (dto.getRole() != null) entity.setRole(Role.fromId(dto.getRole()));
 				if (dto.getActive() != null) entity.setActive(dto.getActive());
 			}
 			entity = repository.saveAndFlush(entity);
