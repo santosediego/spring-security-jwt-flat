@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-	private static Logger logger = LoggerFactory.getLogger(UserService.class);
+	private static Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
 	private final TokenService tokenService;
 	private final UserRepository userRepository;
