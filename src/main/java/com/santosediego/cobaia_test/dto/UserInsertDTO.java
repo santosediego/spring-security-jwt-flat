@@ -10,7 +10,7 @@ public class UserInsertDTO extends UserDTO {
 
 	private static final long serialVersionUID = 1L;
 
-	@Size(min = 3, max = 120, message = "Nome de usuário deve ter entre 5 e 120 caracteres.")
+	@Size(min = 2, max = 120, message = "Nome de usuário deve ter entre 2 e 120 caracteres.")
 	@NotBlank(message = "Nome de usuário é obrigatório")
 	private String username;
 	@NotBlank(message = "Senha é obrigatória")

@@ -5,8 +5,6 @@ import java.time.Instant;
 
 import com.santosediego.cobaia_test.entities.User;
 
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,7 +15,7 @@ public class UserDTO implements Serializable {
 
 	private Long id;
 	@NotBlank(message = "Nome é obrigatório")
-	@Size(min = 3, max = 120, message = "O nome deve ter entre 5 e 120 caracteres.")
+	@Size(min = 2, max = 120, message = "O nome deve ter entre 2 e 120 caracteres.")
 	private String name;
 	private String username;
 	@Email(message = "Email inválido")
@@ -106,12 +104,10 @@ public class UserDTO implements Serializable {
 		return updatedAt;
 	}
 
-	@PrePersist
 	public void prePersist() {
 		createdAt = Instant.now();
 	}
 
-	@PreUpdate
 	public void preUpdate() {
 		updatedAt = Instant.now();
 	}
