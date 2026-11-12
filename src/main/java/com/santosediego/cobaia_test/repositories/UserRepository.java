@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findByUsername(String username);
 
+	long countByRoleAndActive(String role, Boolean active);
+
 	@Query("""
 			SELECT u
 			FROM User u

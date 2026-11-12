@@ -2,6 +2,7 @@ package com.santosediego.cobaia_test.services;
 
 import java.util.Optional;
 
+import com.santosediego.cobaia_test.services.exceptions.DomainValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,11 +79,10 @@ public class UserService implements UserDetailsService {
 		try {
 			authService.validUser(id);
 			User entity = repository.getReferenceById(id);
-			copyDtoToEntity(dto, entity);
 			if (authService.isAdmin()) {
-				if (dto.getRole() != null) entity.setRole(Role.fromId(dto.getRole()));
-				if (dto.getActive() != null) entity.setActive(dto.getActive());
+				applyAdminChanges(dto, entity);
 			}
+			copyDtoToEntity(dto, entity);
 			entity = repository.saveAndFlush(entity);
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -90,11 +90,13 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	@Transactional
 	public void delete(Long id) {
+		User target = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Id not found " + id));
+		validateNotLastActiveAdmin(target);
 		try {
-			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Id not found " + id);
+			repository.delete(target);
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
 		}
@@ -115,5 +117,23 @@ public class UserService implements UserDetailsService {
 		}
 		logger.info("User found: " + username);
 		return user;
+	}
+
+	private void validateNotLastActiveAdmin(User target) {
+		boolean isActiveAdmin = target.getRole() == Role.ADMIN && Boolean.TRUE.equals(target.getActive());
+		if (isActiveAdmin && repository.countByRoleAndActive(Role.ADMIN.getId(), true) <= 1) {
+			throw new DomainValidationException("There must be at least one active administrator");
+		}
+	}
+
+	private void applyAdminChanges(UserUpdateDTO dto, User entity) {
+		boolean demoting = dto.getRole() != null && Role.fromId(dto.getRole()) != Role.ADMIN;
+		boolean deactivating = Boolean.FALSE.equals(dto.getActive());
+
+		if (demoting || deactivating) {
+			validateNotLastActiveAdmin(entity);
+		}
+		if (dto.getRole() != null) entity.setRole(Role.fromId(dto.getRole()));
+		if (dto.getActive() != null) entity.setActive(dto.getActive());
 	}
 }
