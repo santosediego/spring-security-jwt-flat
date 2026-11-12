@@ -24,7 +24,6 @@ public class UserDTO implements Serializable {
 	@Size(max = 120, message = "O e-mail deve ter no máximo 120 caracteres.")
 	private String email;
 	private Boolean active = true;
-	@NotBlank(message = "Preenchimento obrigatório!")
 	private String role;
 	private Instant createdAt;
 	private Instant updatedAt;

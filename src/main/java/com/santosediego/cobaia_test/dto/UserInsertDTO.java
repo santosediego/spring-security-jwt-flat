@@ -15,6 +15,8 @@ public class UserInsertDTO extends UserDTO {
 	private String username;
 	@NotBlank(message = "Senha é obrigatória")
 	private String password;
+	@NotBlank(message = "Preenchimento obrigatório!")
+	private String role;
 
 	public UserInsertDTO() {
 		super();
@@ -34,5 +36,13 @@ public class UserInsertDTO extends UserDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

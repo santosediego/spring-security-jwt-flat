@@ -38,6 +38,9 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository repository;
 
+	@Autowired
+	private AuthService authService;
+
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(Pageable pageable, String name, String username, String email, Boolean active,
 			String role) {
@@ -64,6 +67,7 @@ public class UserService implements UserDetailsService {
 		copyDtoToEntity(dto, entity);
 		entity.setUsername(dto.getUsername());
 		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+		entity.setRole(Role.fromId(dto.getRole()));
 		entity = repository.save(entity);
 		return new UserDTO(entity);
 	}
@@ -71,8 +75,13 @@ public class UserService implements UserDetailsService {
 	@Transactional
 	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
+			authService.validUser(id);
 			User entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
+			if (authService.isAdmin()) {
+				entity.setRole(Role.fromId(dto.getRole()));
+				entity.setActive(dto.getActive());
+			}
 			entity = repository.save(entity);
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -94,7 +103,6 @@ public class UserService implements UserDetailsService {
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
 		entity.setActive(dto.getActive());
-		entity.setRole(Role.fromId(dto.getRole()));
 	}
 
 	@Override
