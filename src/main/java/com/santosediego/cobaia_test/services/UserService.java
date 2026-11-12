@@ -104,7 +104,9 @@ public class UserService implements UserDetailsService {
 
 	private void copyDtoToEntity(UserDTO dto, User entity) {
 		entity.setName(dto.getName());
-		entity.setEmail(dto.getEmail());
+		if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+			entity.setEmail(dto.getEmail());
+		}
 	}
 
 	@Override
