@@ -35,7 +35,7 @@ public class SecurityConfigurations {
 	@Value("${cors.origins}")
 	private String corsOrigins;
 
-	private static final String[] PUBLIC = { "/auth/login", "/h2-console/**" };
+	private static final String[] PUBLIC = { "/auth/login", "/h2-console/**", "/error" };
 	private static final String[] OPERATOR = { "/users/*" };
 	private static final String[] ADMIN = { "/users/**" };
 
