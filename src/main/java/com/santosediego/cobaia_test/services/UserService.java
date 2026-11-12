@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
 				entity.setRole(Role.fromId(dto.getRole()));
 				entity.setActive(dto.getActive());
 			}
-			entity = repository.save(entity);
+			entity = repository.saveAndFlush(entity);
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
