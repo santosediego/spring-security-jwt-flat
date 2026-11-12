@@ -1,8 +1,6 @@
 package com.santosediego.cobaia_test.config;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,8 +59,6 @@ public class TokenService {
     }
 
     private Instant generateExpiration() {
-        return LocalDateTime.now()
-                .plusSeconds(duration)
-                .toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plusSeconds(duration);
     }
 }
